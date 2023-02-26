@@ -1,34 +1,41 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-
 function creatCardImagesMarkup (images) {
-     return images.map(({ preview, original, description }) => {
-		  return `
-		  <div class = "gallery__item">
-		  <a class = "gallery__link" href = "${original}">
-		  <img class = "gallery__img" 
-		  src = "${preview}"
-		  data-source = "${original}"
-		  alt = "${description}"/>
-		  </a>
-		  </div> `}).join("");
-};
+	return images
+	  .map(({ preview, original, description }) => {
+		 return `<div class="gallery__item">
+	<a class="gallery__link" href="${original}">
+	  <img
+		 class="gallery__image"
+		 src="${preview}"
+		 data-source="${original}"
+		 alt="${description}"
+	  />
+	</a>
+ </div>`;
+	  })
+	  .join('');
+ }
+  
 
 const galleryBox = document.querySelector('.gallery');
 const cardsMarkup = creatCardImagesMarkup(galleryItems);
+
 
 galleryBox.innerHTML = cardsMarkup;
 
 galleryBox.addEventListener('click', onClick);
 
-const instance = basicLightbox.create(`<img width="1280" height="720" src="#">`, {onShow: (instance) => {window.addEventListener('keydown', onEscKeyPress)},
-onClose: (instance) => {window.removeEventListener('keydown', onEscKeyPress)}});
+const instance = basicLightbox.create(`<img width="1280" height="auto" src="">`, {onShow: (instance) => {window.addEventListener('keydown', onEscKeyPress)},
+onClose: (instance) => {window.removeEventListener('keydown', onEscKeyPress);}});
 
 
 
 function onClick (event) {
 	event.preventDefault();
+	const dataSet = event.target.dataset.source;
+	if (!dataSet) return;
 	instance.element().querySelector('img').src = event.target.dataset.source;
 	instance.show(); 
 };
