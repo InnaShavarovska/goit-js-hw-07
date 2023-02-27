@@ -27,22 +27,29 @@ galleryBox.innerHTML = cardsMarkup;
 
 galleryBox.addEventListener('click', onClick);
 
-const instance = basicLightbox.create(`<img width="1280" height="auto" src="">`, {onShow: (instance) => {window.addEventListener('keydown', onEscKeyPress)},
-onClose: (instance) => {window.removeEventListener('keydown', onEscKeyPress);}});
-
-
-
-function onClick (event) {
+function onClick(event) {
 	event.preventDefault();
-	const dataSet = event.target.dataset.source;
-	if (!dataSet) return;
-	instance.element().querySelector('img').src = event.target.dataset.source;
-	instance.show(); 
+	if (event.target.nodeName !== 'IMG') {
+		 return;
+	};
+
+	const modal = basicLightbox.create(
+		 `<img src="${event.target.dataset.source}" width="800" height="600">`,
+
+		 {   onShow: () => window.addEventListener('keydown', onEscKeyPress),
+			  onClose: () => window.removeEventListener('keydown', onEscKeyPress),
+		 }
+	);
+	
+	modal.show();
+
+	function onEscKeyPress(event) {   
+		 if (event.code === "Escape") {
+			  modal.close();
+		 }
+	};
 };
 
-function onEscKeyPress (event) {
-	if (event.code !== 'Escape') return;
-	instance.close();
- }
+
 
 console.log(galleryItems);
